@@ -25,7 +25,6 @@ function TabApp() {
             {value === 'two' && <Trainingslist/>}
         </div>
     );
-
 }
     
 export default TabApp;
