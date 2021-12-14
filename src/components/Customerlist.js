@@ -12,7 +12,15 @@ function Customerlist() {
     const [customers, setCustomers] = useState([]);
     const [open, setOpen] = useState(false);
     const [msg, setMsg] = useState('');
+    const [gridApi, setGridApi] = useState(null);
 
+    const onGridReady = (params) => {
+        setGridApi(params.api);
+    };
+
+    const onBtnExport = () => {
+        gridApi.exportDataAsCsv();
+    };
 
     const handleClose = () => {
         setOpen(false);
@@ -91,7 +99,6 @@ function Customerlist() {
         .catch((err) => console.error(err));
     };
 
-
     const columns = [
         {field: 'firstname', sortable: true, filter: true},
         {field: 'lastname', sortable: true, filter: true},
@@ -141,13 +148,23 @@ function Customerlist() {
     return(
         <div>
             <AddCustomer addCustomer={addCustomer} />
+            <Button onClick={() => onBtnExport()}>Download CSV File</Button>
             <div className="ag-theme-material" style={{height: 800, width: '90%', margin:'auto'}}>
                 <AgGridReact
+                    defaultColDef={{
+                        editable: true,
+                        resizable: true,
+                        minWidth: 100,
+                        flex: 1,
+                    }}
+                    suppressExcelExport={true}
+                    popupParent={document.body}
                     rowData={customers}
                     columnDefs={columns}
                     pagination={true}
                     paginationPageSize={10}
                     suppressCellSelection={false}
+                    onGridReady={onGridReady}
                 />
             </div>
             <Snackbar
